@@ -1,5 +1,7 @@
 package sysacademymoduleproject
 
+import "fmt"
+
 type MaxDate func(int64) bool
 
 func MockDataUnits() [20]string {
@@ -125,4 +127,37 @@ func (buyer DataBuyer) UnitEligibilityCheck() (bool, string) {
 	}
 
 	return err, errMessage
+}
+
+type Error struct {
+	error   bool
+	code    int8
+	message string
+	data    []int
+	meta    int8
+}
+
+func HandleError(error bool, code int8, message string, data []int, meta int8) string {
+	if message == "" {
+		return "Message must be filled"
+	}
+
+	if len(data) == 0 {
+		data[0] = 0
+	}
+
+	newError := Error{
+		error:   error,
+		code:    code,
+		message: message,
+		data:    data,
+		meta:    meta,
+	}
+
+	fmt.Printf(
+		"code: %v, error: %v, message: %v, data: %v, meta: %v \n",
+		newError.code, newError.error, newError.message, newError.data, newError.meta,
+	)
+
+	return "Success"
 }
