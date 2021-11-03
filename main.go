@@ -98,3 +98,30 @@ func (buyer DataBuyer) PurchaseUnits(userUnitId ...int) ([]string, int64, int) {
 
 	return unitNames, totalPrice, metaData
 }
+
+func UnitEligibilityCheck(userUnitId ...int) (bool, string) {
+	unitEligible := [20]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+
+	var errMessage string
+	var err bool
+
+	var passCheck int = 0
+
+	for _, unitValid := range unitEligible {
+		for _, unit := range userUnitId {
+			if unit == unitValid-1 {
+				passCheck++
+			}
+		}
+	}
+
+	if passCheck == len(userUnitId) {
+		err = false
+		errMessage = "All unit are eligible"
+	} else {
+		err = true
+		errMessage = "Check your units!"
+	}
+
+	return err, errMessage
+}
