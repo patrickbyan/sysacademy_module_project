@@ -63,10 +63,11 @@ type DataBuyer struct {
 	Name         string
 	ActiveStatus bool
 	Discrepancy  int64
+	UnitId       []int
 }
 
-func (buyer DataBuyer) PurchaseUnits(userUnitId ...int) ([]string, int64, int) {
-	unitNames := GetUnitNames(userUnitId...)
+func (buyer DataBuyer) PurchaseUnits() ([]string, int64, int) {
+	unitNames := GetUnitNames(buyer.UnitId...)
 
 	basePrices := struct {
 		unitGanjil int64
@@ -81,7 +82,7 @@ func (buyer DataBuyer) PurchaseUnits(userUnitId ...int) ([]string, int64, int) {
 		metaData   int
 	)
 
-	for _, unitId := range userUnitId {
+	for _, unitId := range buyer.UnitId {
 		if unitId%2 == 0 {
 			totalPrice += basePrices.unitGenap
 		} else {
@@ -99,7 +100,7 @@ func (buyer DataBuyer) PurchaseUnits(userUnitId ...int) ([]string, int64, int) {
 	return unitNames, totalPrice, metaData
 }
 
-func UnitEligibilityCheck(userUnitId ...int) (bool, string) {
+func (buyer DataBuyer) UnitEligibilityCheck() (bool, string) {
 	unitEligible := [20]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 
 	var errMessage string
@@ -108,14 +109,14 @@ func UnitEligibilityCheck(userUnitId ...int) (bool, string) {
 	var passCheck int = 0
 
 	for _, unitValid := range unitEligible {
-		for _, unit := range userUnitId {
+		for _, unit := range buyer.UnitId {
 			if unit == unitValid-1 {
 				passCheck++
 			}
 		}
 	}
 
-	if passCheck == len(userUnitId) {
+	if passCheck == len(buyer.UnitId) {
 		err = false
 		errMessage = "All unit are eligible"
 	} else {
