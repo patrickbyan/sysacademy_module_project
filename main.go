@@ -4,7 +4,7 @@ import "fmt"
 
 type MaxDate func(int64) bool
 
-func MockDataUnits() [20]string {
+func mockDataUnits() [20]string {
 	baseUnits := [20]string{
 		"unit1", "unit2", "unit3", "unit4", "unit5",
 		"unit6", "unit7", "unit8", "unit9", "unit10",
@@ -14,7 +14,7 @@ func MockDataUnits() [20]string {
 	return baseUnits
 }
 
-func GetStatus(date int64, maxDate MaxDate) bool {
+func getStatus(date int64, maxDate MaxDate) bool {
 	var result bool
 	if maxDate(date) {
 		result = true
@@ -25,8 +25,8 @@ func GetStatus(date int64, maxDate MaxDate) bool {
 	return result
 }
 
-func GetUnitNames(unitId ...int) []string {
-	baseUnits := MockDataUnits()
+func getUnitNames(unitId ...int) []string {
+	baseUnits := mockDataUnits()
 	var unitNames []string
 	for i := 0; i < len(unitId); i++ {
 		var id int = unitId[i]
@@ -57,7 +57,7 @@ func GetDataBuyer(Name string, BornDate int64) (bool, int, []int) {
 		return date <= maximumDate
 	}
 
-	ActiveStatus := GetStatus(BornDate, maxDate)
+	ActiveStatus := getStatus(BornDate, maxDate)
 	return ActiveStatus, Discrepancy, unitId
 }
 
@@ -69,7 +69,7 @@ type DataBuyer struct {
 }
 
 func (buyer DataBuyer) PurchaseUnits() ([]string, int64, int) {
-	unitNames := GetUnitNames(buyer.UnitId...)
+	unitNames := getUnitNames(buyer.UnitId...)
 
 	basePrices := struct {
 		unitGanjil int64
@@ -160,4 +160,8 @@ func HandleError(error bool, code int8, message string, data []int, meta int8) s
 	)
 
 	return "Success"
+}
+
+func PrintReceipt(metaData int32, totalPrice int64, unitNames ...string) {
+	fmt.Printf("purchase units: %v (total: %v units) with a total price of %v successfully \n", unitNames, metaData, totalPrice)
 }
